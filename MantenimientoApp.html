@@ -6,41 +6,19 @@
 <title>Panel de Mantenimiento Industrial</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.5.25/jsrsasign-all-min.js"></script>
 <style>
   :root {
-    --bg: #0f1117;
-    --bg2: #161b27;
-    --bg3: #1e2535;
-    --border: #2a3045;
-    --accent: #e8c840;
-    --accent2: #3b82f6;
-    --text: #e8eaf0;
-    --text2: #8892a4;
-    --text3: #4a5568;
-    --alta: #ef4444;
-    --alta-bg: #2d1414;
-    --media: #f59e0b;
-    --media-bg: #2d2010;
-    --baja: #22c55e;
-    --baja-bg: #102d17;
-    --pendiente: #8892a4;
-    --encurso: #3b82f6;
-    --esperando: #f59e0b;
-    --finalizada: #22c55e;
-    --font: 'IBM Plex Sans', sans-serif;
-    --mono: 'IBM Plex Mono', monospace;
-    --radius: 8px;
+    --bg: #0f1117; --bg2: #161b27; --bg3: #1e2535; --border: #2a3045;
+    --accent: #e8c840; --text: #e8eaf0; --text2: #8892a4; --text3: #4a5568;
+    --alta: #ef4444; --alta-bg: #2d1414; --media: #f59e0b; --media-bg: #2d2010;
+    --baja: #22c55e; --baja-bg: #102d17;
+    --font: 'IBM Plex Sans', sans-serif; --mono: 'IBM Plex Mono', monospace; --radius: 8px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; min-height: 100vh; }
-
-  /* LAYOUT */
   .app { display: flex; min-height: 100vh; }
-  .sidebar { width: 220px; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 0; flex-shrink: 0; position: fixed; top: 0; left: 0; height: 100vh; z-index: 100; }
+  .sidebar { width: 220px; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; height: 100vh; z-index: 100; }
   .main { margin-left: 220px; flex: 1; padding: 2rem; min-height: 100vh; }
-
-  /* SIDEBAR */
   .sidebar-logo { padding: 1.5rem 1.25rem 1rem; border-bottom: 1px solid var(--border); }
   .sidebar-logo-text { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; }
   .sidebar-logo-sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
@@ -54,51 +32,38 @@
   .sync-btn { width: 100%; padding: 8px; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text2); font-size: 12px; cursor: pointer; font-family: var(--mono); transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
   .sync-btn:hover { border-color: var(--accent); color: var(--accent); }
   .sync-status { font-size: 11px; color: var(--text3); text-align: center; margin-top: 6px; font-family: var(--mono); }
-
-  /* HEADER */
   .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-  .page-title { font-size: 20px; font-weight: 500; color: var(--text); }
+  .page-title { font-size: 20px; font-weight: 500; }
   .page-sub { font-size: 12px; color: var(--text2); margin-top: 3px; font-family: var(--mono); }
-  .header-actions { display: flex; gap: 8px; align-items: center; }
-  .btn-primary { padding: 8px 16px; background: var(--accent); color: #0f1117; border: none; border-radius: var(--radius); font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font); transition: all 0.15s; }
+  .header-actions { display: flex; gap: 8px; }
+  .btn-primary { padding: 8px 16px; background: var(--accent); color: #0f1117; border: none; border-radius: var(--radius); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
   .btn-primary:hover { background: #f0d060; }
-  .btn-secondary { padding: 8px 16px; background: transparent; color: var(--text2); border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; cursor: pointer; font-family: var(--font); transition: all 0.15s; }
+  .btn-secondary { padding: 8px 16px; background: transparent; color: var(--text2); border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; cursor: pointer; transition: all 0.15s; }
   .btn-secondary:hover { border-color: var(--text2); color: var(--text); }
-
-  /* SECTIONS */
   .section { display: none; }
   .section.active { display: block; }
-
-  /* METRIC CARDS */
-  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 2rem; }
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 2rem; }
   .metric-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
   .metric-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.1em; font-family: var(--mono); margin-bottom: 8px; }
-  .metric-value { font-size: 32px; font-weight: 300; color: var(--text); line-height: 1; }
+  .metric-value { font-size: 32px; font-weight: 300; line-height: 1; }
   .metric-accent { color: var(--accent); }
   .metric-sub { font-size: 11px; color: var(--text3); margin-top: 6px; }
-
-  /* CHARTS */
   .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 2rem; }
-  .chart-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+  .chart-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; }
   .chart-title { font-size: 12px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.1em; font-family: var(--mono); margin-bottom: 1rem; }
   .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
   .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text2); }
   .legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
-
-  /* BARS */
   .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
   .bar-label { width: 60px; font-size: 12px; color: var(--text2); font-family: var(--mono); flex-shrink: 0; }
   .bar-track { flex: 1; background: var(--bg3); border-radius: 20px; height: 6px; overflow: hidden; }
   .bar-fill { height: 100%; border-radius: 20px; transition: width 0.8s ease; }
   .bar-pct { width: 36px; text-align: right; font-size: 12px; color: var(--text); font-family: var(--mono); flex-shrink: 0; }
   .bar-count { width: 20px; text-align: right; font-size: 11px; color: var(--text3); font-family: var(--mono); flex-shrink: 0; }
-
-  /* TABLE */
   .table-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
   .table-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 10px; }
   .filters { display: flex; gap: 8px; flex-wrap: wrap; }
   .filters select { font-size: 12px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg3); color: var(--text2); font-family: var(--mono); cursor: pointer; }
-  .filters select:focus { outline: none; border-color: var(--accent); color: var(--text); }
   .table-scroll { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 700px; }
   th { text-align: left; padding: 10px 14px; font-size: 11px; font-family: var(--mono); color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; border-bottom: 1px solid var(--border); background: var(--bg3); font-weight: 400; }
@@ -109,22 +74,18 @@
   .date-cell { font-family: var(--mono); font-size: 12px; color: var(--text2); white-space: nowrap; }
   .desc-cell { max-width: 280px; }
   .obs-cell { font-size: 12px; color: var(--text2); max-width: 200px; }
-
-  /* BADGES */
   .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; white-space: nowrap; font-family: var(--mono); }
   .badge-alta { background: var(--alta-bg); color: var(--alta); }
   .badge-media { background: var(--media-bg); color: var(--media); }
   .badge-baja { background: var(--baja-bg); color: var(--baja); }
-  .badge-pendiente { background: var(--bg3); color: var(--pendiente); border: 1px solid var(--border); }
-  .badge-encurso { background: rgba(59,130,246,0.1); color: var(--encurso); }
-  .badge-esperando { background: var(--media-bg); color: var(--esperando); }
-  .badge-finalizada { background: var(--baja-bg); color: var(--finalizada); }
-
-  /* MODAL */
+  .badge-pendiente { background: var(--bg3); color: var(--text2); border: 1px solid var(--border); }
+  .badge-encurso { background: rgba(59,130,246,0.1); color: #3b82f6; }
+  .badge-esperando { background: var(--media-bg); color: var(--media); }
+  .badge-finalizada { background: var(--baja-bg); color: var(--baja); }
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; display: none; align-items: center; justify-content: center; padding: 1rem; }
   .modal-overlay.open { display: flex; }
   .modal { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; width: 100%; max-width: 520px; }
-  .modal-title { font-size: 16px; font-weight: 500; margin-bottom: 1.5rem; color: var(--text); }
+  .modal-title { font-size: 16px; font-weight: 500; margin-bottom: 1.5rem; }
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; }
   .form-group.full { grid-column: 1 / -1; }
@@ -133,17 +94,13 @@
   .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--accent); }
   .form-textarea { resize: vertical; min-height: 70px; }
   .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 1.5rem; }
-
-  /* LOADING */
   .loading { display: flex; align-items: center; justify-content: center; padding: 4rem; color: var(--text2); font-family: var(--mono); font-size: 13px; gap: 10px; }
-  .spinner { width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+  .spinner { width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
   .empty { text-align: center; padding: 3rem; color: var(--text3); font-family: var(--mono); font-size: 13px; }
   .error-msg { background: var(--alta-bg); border: 1px solid var(--alta); border-radius: var(--radius); padding: 1rem; color: var(--alta); font-size: 13px; margin-bottom: 1rem; font-family: var(--mono); }
-
   @media (max-width: 768px) {
-    .sidebar { width: 100%; height: auto; position: relative; flex-direction: row; flex-wrap: wrap; }
+    .sidebar { width: 100%; height: auto; position: relative; }
     .main { margin-left: 0; padding: 1rem; }
     .charts-grid { grid-template-columns: 1fr; }
     .sidebar-nav { display: flex; flex-direction: row; padding: 0; overflow-x: auto; }
@@ -177,9 +134,7 @@
       <div class="sync-status" id="syncStatus">—</div>
     </div>
   </aside>
-
   <main class="main">
-    <!-- DASHBOARD -->
     <section id="sec-dashboard" class="section active">
       <div class="page-header">
         <div>
@@ -191,10 +146,8 @@
           <button class="btn-primary" onclick="openModal()">+ Nueva tarea</button>
         </div>
       </div>
-      <div id="dashContent"><div class="loading"><div class="spinner"></div>Conectando con Google Sheets...</div></div>
+      <div id="dashContent"><div class="loading"><div class="spinner"></div>Conectando...</div></div>
     </section>
-
-    <!-- TAREAS -->
     <section id="sec-tareas" class="section">
       <div class="page-header">
         <div>
@@ -226,40 +179,17 @@
     </section>
   </main>
 </div>
-
-<!-- MODAL NUEVA TAREA -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-title">Nueva tarea</div>
     <div class="form-grid">
-      <div class="form-group">
-        <label class="form-label">Fecha</label>
-        <input type="date" class="form-input" id="fFecha">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Planta</label>
-        <input type="text" class="form-input" id="fPlanta" placeholder="Ej: Molino Harinero">
-      </div>
-      <div class="form-group full">
-        <label class="form-label">Equipo</label>
-        <input type="text" class="form-input" id="fEquipo" placeholder="Ej: Elevador N°3">
-      </div>
-      <div class="form-group full">
-        <label class="form-label">Descripción</label>
-        <textarea class="form-textarea" id="fDesc" placeholder="Describí la tarea a realizar..."></textarea>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Prioridad</label>
-        <select class="form-select" id="fPrioridad"><option>Alta</option><option selected>Media</option><option>Baja</option></select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Estado</label>
-        <select class="form-select" id="fEstado"><option selected>Pendiente</option><option>En curso</option><option>Esperando materiales</option><option>Finalizada</option></select>
-      </div>
-      <div class="form-group full">
-        <label class="form-label">Observaciones</label>
-        <input type="text" class="form-input" id="fObs" placeholder="Opcional">
-      </div>
+      <div class="form-group"><label class="form-label">Fecha</label><input type="date" class="form-input" id="fFecha"></div>
+      <div class="form-group"><label class="form-label">Planta</label><input type="text" class="form-input" id="fPlanta" placeholder="Ej: Molino Harinero"></div>
+      <div class="form-group full"><label class="form-label">Equipo</label><input type="text" class="form-input" id="fEquipo" placeholder="Ej: Elevador N°3"></div>
+      <div class="form-group full"><label class="form-label">Descripción</label><textarea class="form-textarea" id="fDesc" placeholder="Describí la tarea a realizar..."></textarea></div>
+      <div class="form-group"><label class="form-label">Prioridad</label><select class="form-select" id="fPrioridad"><option>Alta</option><option selected>Media</option><option>Baja</option></select></div>
+      <div class="form-group"><label class="form-label">Estado</label><select class="form-select" id="fEstado"><option selected>Pendiente</option><option>En curso</option><option>Esperando materiales</option><option>Finalizada</option></select></div>
+      <div class="form-group full"><label class="form-label">Observaciones</label><input type="text" class="form-input" id="fObs" placeholder="Opcional"></div>
     </div>
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
@@ -267,100 +197,45 @@
     </div>
   </div>
 </div>
-
 <script>
-// ── CONFIGURACIÓN ──────────────────────────────────────────────
-const SPREADSHEET_ID = '1SXkapLU5ueXpCzMO26C2qZsCINF7ZU-o';
-const SHEET_NAME = 'Tareas mtto';
-const SERVICE_ACCOUNT = {
-  client_email: "mantenimiento-app@web-dashboard-493822.iam.gserviceaccount.com",
-  private_key: "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCqNz9A/YcZXkth\nmwd9bJjGiIZGDpLhiWnvc36cqHv96eF0G1ZheE2a4TloM4A43TNRx3j/ox5SXZxo\ndhIPC3Nm38jtIu8OjNvlY9hAY7McGdi3FJTMid2esJxXkJrQT3skWyY7CmMec9Fe\n9Jslms+cNsLp+DHp7d2RaUuQEIpSQoC5bXTBGu7LGvQyho5exB+jyL267NBpScv2\nLoMsailGtVuxK8e0dA+bKwu+1GDLq5dTahpZdjoKRQPQ34Znshzq+igcho4Qbx2K\njoLbMy3SkCIPv+O/u9C6UitwXmBmMD4Hw/D+Y7r0HJZ07xOTMI23Y6HOqaSEPCGN\nvrfBnMl3AgMBAAECggEAQeu1hpDpUmzPWtS0eOGm5TSYc+dPASO7sC2VekxSAMsk\nMlgoAwWZYIMbPXy8isk4B9LtzGs64gE5Ase/RK5VmiDO6u/dj1AEFXmulXlHM3nb\nEURaQECgYMXbNppdKpGtii32x2TFcFTAYDrxHwYuozweDoi9o/AoIBmcVwXg2+wd\nfi6f77mPd+0UHleRxTAYOPBQVsKwp+qO+jRuHsl4RZOL4V1ENhS9NdfqSN2sx+Al\n53k+k8esVQxMTj/FkwTszqX2UlzsfRagIxHaetFJUfk/8XGWdZmH1AG3IObY/Isj\nW2stPsxKSB1Cbl4dO2yvwYek85EOrwmmf08oAkCZuQKBgQDdlvzFKJp1jhoEEnsE\nNTSvGv6VivkhX0hJldUfwmiFGLeqg+215yQvmtsLCPE0YX8TrXJWSPaB5QiPFjtt\n56zL/DJMrd9TN2lnuv3o8WP51pTeX6k1TtyAGEaKg1fpAg87x51Os4RUtOBDoe8l\nKYWHPCIEE7goHvSCpPDqThqlUwKBgQDEpfQ9edg46cQgmHp82dRgDZH5PCLFvLj9\nbnIYsVSmnrzAgj+JTQE/3ZBh2o0r2rzPlOkR1Fd+fCdFbdAfxj8cwCd0jIGUSvSx\nPqpV/Eoxnxnq3wEwQnSRR9kvjMB9JX3qIPBFs1x1XL4eUZt8bBbvyP9S/7OQThP0\nEXxDBd1CzQKBgQCWc1qiPsRIxrfRRf7yR3HC5nAudtJaH0iEdc/jpWqz26lwg+zV\nEeAW1myc3HBw4TWX1a8I+LcuUKR0CmNFZwSC53P7bh5wcPIHNQYKsELyMgiXx5mq\nkSXTbygOCcmZcgWH0Ct1cRuLK9gM85jcwYlg3ao23HCwBPx866KLY4Zh8wKBgQCQ\nkHvcUd2+AUSYvd+WN0Ekl/VPJ4Fcop/QV8hzFLJph1q1n0r8MesQO17wQQ31Rmn1\npMAuxk7IApeQN+l/4mr1ROH8kWqVTQFT6ACrE7yrfA4+l1C1XLV7NDma9jtwBQbq\n/uoEI5Z+BP8TJOVMc93sy3PAXZBxLqUGkXAriX0epQKBgCAPIXddqJgTdruj1eYV\ni/vKPHKibAxExdMpqSLDAKX3f0VpKMDivIQD4HqDP51VdxKoK161LkSVQUmjSKEe\nb6SAsehrgN3RK76gjWzQoj/p9hYJtJ40KLdKVnfWzS5M4DTXHYb8JI3EPwKLmT+G\nTDVr8Iigi+oEyxIq++AvQJ+R\n-----END PRIVATE KEY-----\n"
-};
-
+const API_URL = 'https://script.google.com/macros/s/AKfycbxbvJqyh9nxBR_8oRZfbVe6gXZOvLAIewXID6KO3xrIPwfL3cbb6xt8-_JfH8LFFoEalA/exec';
 let tareas = [];
-let accessToken = null;
-let tokenExpiry = 0;
 let chartPrio = null, chartEst = null;
 
-// ── JWT / AUTH ─────────────────────────────────────────────────
-async function getAccessToken() {
-  if (accessToken && Date.now() < tokenExpiry - 60000) return accessToken;
-  const now = Math.floor(Date.now() / 1000);
-  const header = { alg: 'RS256', typ: 'JWT' };
-  const payload = {
-    iss: SERVICE_ACCOUNT.client_email,
-    scope: 'https://www.googleapis.com/auth/spreadsheets',
-    aud: 'https://oauth2.googleapis.com/token',
-    exp: now + 3600,
-    iat: now
-  };
-  const h = btoa(JSON.stringify(header)).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
-  const p = btoa(unescape(encodeURIComponent(JSON.stringify(payload)))).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
-  const unsigned = h + '.' + p;
-  const sig = KJUR.crypto.Signature.sign ? null : null;
-  const rs = new KJUR.crypto.Signature({ alg: 'SHA256withRSA' });
-  rs.init(SERVICE_ACCOUNT.private_key);
-  rs.updateString(unsigned);
-  const sigHex = rs.sign();
-  const sigB64 = btoa(String.fromCharCode(...sigHex.match(/../g).map(h => parseInt(h,16)))).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
-  const jwt = unsigned + '.' + sigB64;
-  const res = await fetch('https://oauth2.googleapis.com/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=${jwt}`
-  });
-  const data = await res.json();
-  if (!data.access_token) throw new Error('No se pudo obtener el token: ' + JSON.stringify(data));
-  accessToken = data.access_token;
-  tokenExpiry = Date.now() + data.expires_in * 1000;
-  return accessToken;
-}
-
-// ── SHEETS API ─────────────────────────────────────────────────
 async function readSheet() {
-  const token = await getAccessToken();
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(SHEET_NAME)}`;
-  const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-  if (!res.ok) throw new Error('Error leyendo sheet: ' + res.status);
+  const res = await fetch(API_URL + '?action=read');
   const data = await res.json();
-  return data.values || [];
+  if (!data.ok) throw new Error(data.error);
+  return data.data;
 }
 
 async function appendRow(row) {
-  const token = await getAccessToken();
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(SHEET_NAME)}:append?valueInputOption=USER_ENTERED`;
-  const res = await fetch(url, {
+  const res = await fetch(API_URL, {
     method: 'POST',
-    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ values: [row] })
+    body: JSON.stringify({ action: 'append', row })
   });
-  if (!res.ok) throw new Error('Error guardando: ' + res.status);
-  return res.json();
+  const data = await res.json();
+  if (!data.ok) throw new Error(data.error);
 }
 
-// ── LOAD DATA ──────────────────────────────────────────────────
 async function loadData() {
   document.getElementById('syncStatus').textContent = 'Sincronizando...';
   try {
     const rows = await readSheet();
-    if (rows.length <= 1) { tareas = []; }
-    else {
-      tareas = rows.slice(1).map(r => ({
-        id: r[0] || '', fecha: r[1] || '', planta: r[2] || '', equipo: r[3] || '',
-        desc: r[4] || '', prioridad: r[5] || '', estado: r[6] || '', obs: r[7] || ''
-      })).filter(t => t.id);
-    }
+    tareas = rows.length <= 1 ? [] : rows.slice(1).map(r => ({
+      id: r[0]||'', fecha: r[1]||'', planta: r[2]||'', equipo: r[3]||'',
+      desc: r[4]||'', prioridad: r[5]||'', estado: r[6]||'', obs: r[7]||''
+    })).filter(t => t.id);
     const now = new Date().toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit' });
-    document.getElementById('syncStatus').textContent = 'Última sync: ' + now;
-    document.getElementById('dashSub').textContent = tareas.length + ' tareas · actualizado ' + now;
+    document.getElementById('syncStatus').textContent = 'Sync: ' + now;
+    document.getElementById('dashSub').textContent = tareas.length + ' tareas · ' + now;
     renderDashboard();
     renderTable();
     initFiltros();
     showError('');
   } catch(e) {
-    document.getElementById('syncStatus').textContent = 'Error al sincronizar';
+    document.getElementById('syncStatus').textContent = 'Error';
     showError('Error de conexión: ' + e.message);
-    console.error(e);
   }
 }
 
@@ -369,23 +244,21 @@ function showError(msg) {
   if (el) el.innerHTML = msg ? `<div class="error-msg">${msg}</div>` : '';
 }
 
-// ── DASHBOARD ──────────────────────────────────────────────────
 function renderDashboard() {
   const total = tareas.length;
-  const alta = tareas.filter(t => t.prioridad === 'Alta').length;
-  const media = tareas.filter(t => t.prioridad === 'Media').length;
-  const baja = tareas.filter(t => t.prioridad === 'Baja').length;
+  const alta = tareas.filter(t => t.prioridad==='Alta').length;
+  const media = tareas.filter(t => t.prioridad==='Media').length;
+  const baja = tareas.filter(t => t.prioridad==='Baja').length;
   const activas = tareas.filter(t => ['Pendiente','En curso'].includes(t.estado)).length;
-  const esperando = tareas.filter(t => t.estado === 'Esperando materiales').length;
-  const finalizadas = tareas.filter(t => t.estado === 'Finalizada').length;
-  const pctAlta = total ? Math.round(alta/total*100) : 0;
-  const pctMedia = total ? Math.round(media/total*100) : 0;
-  const pctBaja = total ? Math.round(baja/total*100) : 0;
-
+  const esperando = tareas.filter(t => t.estado==='Esperando materiales').length;
+  const finalizadas = tareas.filter(t => t.estado==='Finalizada').length;
+  const pA = total ? Math.round(alta/total*100) : 0;
+  const pM = total ? Math.round(media/total*100) : 0;
+  const pB = total ? Math.round(baja/total*100) : 0;
   document.getElementById('dashContent').innerHTML = `
     <div class="metric-grid">
       <div class="metric-card"><div class="metric-label">Total tareas</div><div class="metric-value">${total}</div><div class="metric-sub">en el sistema</div></div>
-      <div class="metric-card"><div class="metric-label">Críticas (Alta)</div><div class="metric-value metric-accent">${alta}</div><div class="metric-sub">${pctAlta}% del total</div></div>
+      <div class="metric-card"><div class="metric-label">Críticas (Alta)</div><div class="metric-value metric-accent">${alta}</div><div class="metric-sub">${pA}% del total</div></div>
       <div class="metric-card"><div class="metric-label">Activas</div><div class="metric-value">${activas}</div><div class="metric-sub">pendiente o en curso</div></div>
       <div class="metric-card"><div class="metric-label">Esp. materiales</div><div class="metric-value">${esperando}</div><div class="metric-sub">aguardando repuestos</div></div>
       <div class="metric-card"><div class="metric-label">Finalizadas</div><div class="metric-value">${finalizadas}</div><div class="metric-sub">completadas</div></div>
@@ -394,9 +267,9 @@ function renderDashboard() {
       <div class="chart-card">
         <div class="chart-title">Por prioridad</div>
         <div class="legend">
-          <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>Alta ${pctAlta}%</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Media ${pctMedia}%</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>Baja ${pctBaja}%</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>Alta ${pA}%</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Media ${pM}%</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>Baja ${pB}%</div>
         </div>
         <div style="position:relative;height:180px;"><canvas id="chartPrio" role="img" aria-label="Tareas por prioridad"></canvas></div>
       </div>
@@ -414,12 +287,11 @@ function renderDashboard() {
     <div class="chart-card">
       <div class="chart-title">Distribución por criticidad</div>
       <div style="margin-top:12px;">
-        <div class="bar-row"><div class="bar-label">Alta</div><div class="bar-track"><div class="bar-fill" style="width:${pctAlta}%;background:#ef4444;"></div></div><div class="bar-pct">${pctAlta}%</div><div class="bar-count">${alta}</div></div>
-        <div class="bar-row"><div class="bar-label">Media</div><div class="bar-track"><div class="bar-fill" style="width:${pctMedia}%;background:#f59e0b;"></div></div><div class="bar-pct">${pctMedia}%</div><div class="bar-count">${media}</div></div>
-        <div class="bar-row"><div class="bar-label">Baja</div><div class="bar-track"><div class="bar-fill" style="width:${pctBaja}%;background:#22c55e;"></div></div><div class="bar-pct">${pctBaja}%</div><div class="bar-count">${baja}</div></div>
+        <div class="bar-row"><div class="bar-label">Alta</div><div class="bar-track"><div class="bar-fill" style="width:${pA}%;background:#ef4444;"></div></div><div class="bar-pct">${pA}%</div><div class="bar-count">${alta}</div></div>
+        <div class="bar-row"><div class="bar-label">Media</div><div class="bar-track"><div class="bar-fill" style="width:${pM}%;background:#f59e0b;"></div></div><div class="bar-pct">${pM}%</div><div class="bar-count">${media}</div></div>
+        <div class="bar-row"><div class="bar-label">Baja</div><div class="bar-track"><div class="bar-fill" style="width:${pB}%;background:#22c55e;"></div></div><div class="bar-pct">${pB}%</div><div class="bar-count">${baja}</div></div>
       </div>
     </div>`;
-
   if (chartPrio) chartPrio.destroy();
   if (chartEst) chartEst.destroy();
   const estadoLabels = ['Pendiente','En curso','Esperando materiales','Finalizada'];
@@ -435,7 +307,6 @@ function renderDashboard() {
   });
 }
 
-// ── TABLE ──────────────────────────────────────────────────────
 function initFiltros() {
   const plantas = [...new Set(tareas.map(t => t.planta).filter(Boolean))].sort();
   const sel = document.getElementById('filtroPlanta');
@@ -447,34 +318,22 @@ function renderTable() {
   const fp = document.getElementById('filtroPlanta').value;
   const fpr = document.getElementById('filtroPrioridad').value;
   const fe = document.getElementById('filtroEstado').value;
-  const filtered = tareas.filter(t =>
-    (!fp || t.planta === fp) && (!fpr || t.prioridad === fpr) && (!fe || t.estado === fe)
-  );
+  const filtered = tareas.filter(t => (!fp||t.planta===fp) && (!fpr||t.prioridad===fpr) && (!fe||t.estado===fe));
   document.getElementById('tableCount').textContent = filtered.length + ' de ' + tareas.length;
-  const badgePrio = p => { const c={Alta:'alta',Media:'media',Baja:'baja'}[p]||''; return `<span class="badge badge-${c}">${p||'—'}</span>`; };
-  const badgeEst = e => { const c={'Pendiente':'pendiente','En curso':'encurso','Esperando materiales':'esperando','Finalizada':'finalizada'}[e]||'pendiente'; return `<span class="badge badge-${c}">${e||'—'}</span>`; };
+  const bP = p => { const c={Alta:'alta',Media:'media',Baja:'baja'}[p]||''; return `<span class="badge badge-${c}">${p||'—'}</span>`; };
+  const bE = e => { const c={'Pendiente':'pendiente','En curso':'encurso','Esperando materiales':'esperando','Finalizada':'finalizada'}[e]||'pendiente'; return `<span class="badge badge-${c}">${e||'—'}</span>`; };
   const tbody = document.getElementById('tbody');
   if (!filtered.length) { tbody.innerHTML = `<tr><td colspan="8"><div class="empty">Sin tareas con ese filtro</div></td></tr>`; return; }
   tbody.innerHTML = filtered.map(t => `<tr>
-    <td class="id-cell">#${t.id}</td>
-    <td class="date-cell">${t.fecha}</td>
-    <td>${t.planta}</td>
-    <td>${t.equipo}</td>
-    <td class="desc-cell">${t.desc}</td>
-    <td>${badgePrio(t.prioridad)}</td>
-    <td>${badgeEst(t.estado)}</td>
-    <td class="obs-cell">${t.obs}</td>
+    <td class="id-cell">#${t.id}</td><td class="date-cell">${t.fecha}</td><td>${t.planta}</td>
+    <td>${t.equipo}</td><td class="desc-cell">${t.desc}</td>
+    <td>${bP(t.prioridad)}</td><td>${bE(t.estado)}</td><td class="obs-cell">${t.obs}</td>
   </tr>`).join('');
 }
 
-// ── MODAL ──────────────────────────────────────────────────────
 function openModal() {
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('fFecha').value = today;
-  document.getElementById('fPlanta').value = '';
-  document.getElementById('fEquipo').value = '';
-  document.getElementById('fDesc').value = '';
-  document.getElementById('fObs').value = '';
+  document.getElementById('fFecha').value = new Date().toISOString().split('T')[0];
+  ['fPlanta','fEquipo','fDesc','fObs'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('fPrioridad').value = 'Media';
   document.getElementById('fEstado').value = 'Pendiente';
   document.getElementById('modalOverlay').classList.add('open');
@@ -482,14 +341,14 @@ function openModal() {
 function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
 
 async function guardarTarea() {
-  const fecha = document.getElementById('fFecha').value;
   const planta = document.getElementById('fPlanta').value.trim();
   const equipo = document.getElementById('fEquipo').value.trim();
   const desc = document.getElementById('fDesc').value.trim();
+  if (!planta || !equipo || !desc) { alert('Completá planta, equipo y descripción.'); return; }
+  const fecha = document.getElementById('fFecha').value;
   const prioridad = document.getElementById('fPrioridad').value;
   const estado = document.getElementById('fEstado').value;
   const obs = document.getElementById('fObs').value.trim();
-  if (!planta || !equipo || !desc) { alert('Completá planta, equipo y descripción.'); return; }
   const nextId = tareas.length ? Math.max(...tareas.map(t => parseInt(t.id)||0)) + 1 : 1;
   const fechaFmt = fecha ? new Date(fecha + 'T00:00:00').toLocaleDateString('es-AR') : '';
   const btn = document.getElementById('btnGuardar');
@@ -503,7 +362,6 @@ async function guardarTarea() {
   } finally { btn.textContent = 'Guardar tarea'; btn.disabled = false; }
 }
 
-// ── NAV ────────────────────────────────────────────────────────
 function switchSection(id, el) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -511,7 +369,6 @@ function switchSection(id, el) {
   el.classList.add('active');
 }
 
-// ── INIT ───────────────────────────────────────────────────────
 loadData();
 </script>
 </body>
